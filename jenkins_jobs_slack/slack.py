@@ -51,6 +51,21 @@ def slack_publisher(parser, xml_parent, data):
             room: '#jenkins'
     """
 
+    # extract defaults from the plugin configuration,
+    # just like the UI does
+    defaults = {}
+    try:
+        et = XML.parse('/var/lib/jenkins/jenkins.plugins.slack.SlackNotifier.xml')
+        for (nn, opt) in (('teamDomain', 'team-domain'),
+                          ('token', 'auth-token'),
+                          ('room', 'room'),
+                          ('buildServerUrl', 'build-server-url')):
+            node = et.find(nn)
+            if node is not None :
+                defaults[opt] = node.text
+    except IOError:
+        pass
+
     notifier = XML.SubElement(
         xml_parent, 'jenkins.plugins.slack.SlackNotifier')
     notifier.set('plugin', 'slack@1.2')
@@ -59,4 +74,7 @@ def slack_publisher(parser, xml_parent, data):
                         ('auth-token', 'authToken'),
                         ('build-server-url', 'buildServerUrl'),
                         ('room', 'room')):
-        XML.SubElement(notifier, attr).text = data.get(opt, '')
+        if opt in data :
+            XML.SubElement(notifier, attr).text = data[opt]
+        elif opt in defaults :
+            XML.SubElement(notifier, attr).text = defaults[opt]
