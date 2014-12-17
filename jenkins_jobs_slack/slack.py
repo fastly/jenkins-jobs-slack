@@ -15,6 +15,7 @@ def slack_properties(parser, xml_parent, data):
             notify-unstable: true
             notify-failure: true
             notify-backtonormal: true
+            room: '#jenkins'
     """
     if data is None:
         data = dict()
@@ -22,6 +23,9 @@ def slack_properties(parser, xml_parent, data):
     notifier = XML.SubElement(
         xml_parent, 'jenkins.plugins.slack.SlackNotifier_-SlackJobProperty')
     notifier.set('plugin', 'slac@1.2')
+
+    if 'room' in data :
+        XML.SubElement(notifier, 'room').text = data['room']
 
     for opt, attr in (('notify-start', 'startNotification'),
                       ('notify-success', 'notifySuccess'),
