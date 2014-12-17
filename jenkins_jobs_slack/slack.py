@@ -22,7 +22,7 @@ def slack_properties(parser, xml_parent, data):
 
     notifier = XML.SubElement(
         xml_parent, 'jenkins.plugins.slack.SlackNotifier_-SlackJobProperty')
-    notifier.set('plugin', 'slac@1.2')
+    notifier.set('plugin', 'slack@1.2')
 
     if 'room' in data :
         XML.SubElement(notifier, 'room').text = data['room']
@@ -53,7 +53,7 @@ def slack_publisher(parser, xml_parent, data):
 
     notifier = XML.SubElement(
         xml_parent, 'jenkins.plugins.slack.SlackNotifier')
-    notifier.set('plugin', 'slac@1.2')
+    notifier.set('plugin', 'slack@1.2')
 
     for (opt, attr) in (('team-domain', 'teamDomain'),
                         ('auth-token', 'authToken'),
